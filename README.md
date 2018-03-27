@@ -35,22 +35,25 @@ Git Commands
 ---------------
 Here you can find some useful git commands, which you need when using git bash
 
-###Configure Tooling
-Configure user information for all local repositories
+### Configure Tooling
+Configure user information for all local repositories.
+
 | Command | Use |
 | ------ | ------ |
 | $ git config --global user.name "[name]"| Sets the name you want attached to your commit transactions |
 | $ git config --global user.email "[email address]"| Sets the email you want atached to your commit transactions |
 
-###Create Repositories
+### Create Repositories
 Start a new repository or obtain one from an existing URL.
+
 | Command | Use |
 | ------ | ------ |
 |$ git init [project-name]| Creates a new local repository with the specified name |
 |$ git clone [url]| Downloads a project and its entire version history |
 
-###Make changes
-Review edits and craft a commit transaction
+### Make changes
+Review edits and craft a commit transaction.
+
 | Command | Use |
 | ------ | ------ |
 |$ git diff| Shows file differences not yet staged |
@@ -59,8 +62,9 @@ Review edits and craft a commit transaction
 |$ git commit -m "[descriptive message]"| Records file snapshots permanently in version history |
 |$ git commit -m "*write here the change you made*"| Stop the apache server |
 
-###Synchronize Changes
-Register a repository bookmark and exchange version history
+### Synchronize Changes
+Register a repository bookmark and exchange version history.
+
 | Command | Use |
 | ------ | ------ |
 |$ git pull| Downloads bookmark history and incorporates changes|
