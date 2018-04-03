@@ -130,8 +130,8 @@ Review edits and craft a commit transaction.
 |$ git diff| Shows file differences not yet staged |
 |$ git status| Lists all new or modified files to be commited |
 |$ git add [file]| Snapshots the file in preparation for versioning |
-|$ git commit -m "[descriptive message]"| Records file snapshots permanently in version history |
-|$ git commit -m "*write here the change you made*"| Stop the apache server |
+|$ git commit -m "[descriptive message]"| Comment your change |
+
 
 ### Synchronize Changes
 Register a repository bookmark and exchange version history.
