@@ -67,20 +67,16 @@ docker exec -t mysql bash
 docker ps
 ```
 ## Webserver Testen
-Es gibt zwei Arten, um zu schauen ob der Dienst läuft:
-```sh
-docker-machine ip default
-
-curl http://192.168.99.100:8080
-```
-oder über einem Browser:
-IP:8080
+Um sicher zu sein dass der Apache Server aktiv ist, habe ich folgendes gemacht:
+1. Browser öffnen
+2. IP eingeben ( 127.17.0.2)
+Ausgabe: Default Apache2 Seite 
 
 ## Firewall Regeln nachschauen
 ```sh
 docker-machine ip default
 
-curl http://192.168.99.100:8080
+curl http://127.17.0.2:8080
 ```
 ## Monitoring
 Über CMD:
@@ -88,19 +84,97 @@ curl http://192.168.99.100:8080
 docker stats
 ```
 Mit Cadvisor:
+Starte Cadvisor mit:
 ```sh
-docker run -d --name cadvisor -v /:/rootfs:ro -v /var/run:/var/run:rw -v /sys:/sys:ro -v /var/lib/docker/:/var/lib/docker:ro -p 8080:8080 webserver/cadvisor
+sudo docker run \
+  --volume=/:/rootfs:ro \
+  --volume=/var/run:/var/run:rw \
+  --volume=/sys:/sys:ro \
+  --volume=/var/lib/docker/:/var/lib/docker:ro \
+  --volume=/dev/disk/:/dev/disk:ro \
+  --publish=8080:8080 \
+  --detach=true \
+  --name=cadvisor \
+  google/cadvisor:latest
 ```
+Im Browser: localhost:8080/containers/
+
+## RAM Begrenzung
+Die maximale RAM kann man mit folgendem Befehl festgelegt werden:
+```sh
+docker run -m 2096m --memory-swap 2096m
+```
+
 ### Docker User erstellen
 Erstelle ein User mit dem folgendem Befehl:
 ```sh
-RUN groupadd -r User_Group && useradd -r -g User_group xyz
+RUN groupadd -r User_Group && useradd -r -g User_group athikatesting
 ```
 Mit diesem Befehl loggt man sich ein:
 ```sh
-RUN groupadd -r User_Group && useradd -r -g User_group xyz
+docker run -ti name:Version /bin/bash
+su athikatesting
 ```
+# Eigener Container erstellen
+1. Vagrant File zu Dockerfile umwandeln:
+Beispiel Dockerfile:
+```sh
+#
+FROM ubuntu:16.04
+
+RUN apt-get update
+RUN apt-get -y install apt-utils
+RUN apt-get -y upgrade
+#Apache installieren
+RUN apt-get -y install apache2 
+RUN apt-get install ufw -y
 
 
+#proxy aktivieren
+RUN a2enmod proxy
+RUN a2enmod proxy_http
+RUN a2enmod proxy_balancer
+RUN a2enmod lbmethod_byrequests
+
+CMD systemctl restart apache2
+
+# Konfiguration Apache
+ENV APACHE_RUN_USER www-data
+ENV APACHE_RUN_GROUP www-data
+ENV APACHE_LOG_DIR /var/log/apache2
+
+RUN mkdir -p /var/lock/apache2 /var/run/apache2
+
+RUN groupadd -r Docker_Group && useradd -r -g Docker_Group athikatesting
+
+EXPOSE 80
+
+VOLUME /var/www/html
+
+CMD /usr/sbin/apache2ctl -D FOREGROUND
+
+#default html ersetzen
+ADD  index.html /var/www/html
+#firewall config ausführen
+ADD ufw.sh . 
+RUN chmod +x ./ufw.sh
+```
+2. Im verzeichnis gehen, wo das Dockerfile ist (cd /home/name/Documents/docker/name)
+3. Dockerfile builden: 
+```sh
+docker build -t name .
+```
+4. Dockerfile starten mit:
+```sh
+docker run --rm -d --name name name
+```
+5. Funktionsfähigkeit überprüfen:
+```sh
+docker exec -it name bash
+```
+und im Container
+```sh
+ps -ef
+netstat -tulpen
 
 
