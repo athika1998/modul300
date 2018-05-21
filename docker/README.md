@@ -115,61 +115,19 @@ docker run -ti name:Version /bin/bash
 su athikatesting
 ```
 # Eigener Container erstellen
-1. Vagrant File zu Dockerfile umwandeln:
-Beispiel Dockerfile:
-```sh
-#
-FROM ubuntu:16.04
-
-RUN apt-get update
-RUN apt-get -y install apt-utils
-RUN apt-get -y upgrade
-#Apache installieren
-RUN apt-get -y install apache2 
-RUN apt-get install ufw -y
-
-
-#proxy aktivieren
-RUN a2enmod proxy
-RUN a2enmod proxy_http
-RUN a2enmod proxy_balancer
-RUN a2enmod lbmethod_byrequests
-
-CMD systemctl restart apache2
-
-# Konfiguration Apache
-ENV APACHE_RUN_USER www-data
-ENV APACHE_RUN_GROUP www-data
-ENV APACHE_LOG_DIR /var/log/apache2
-
-RUN mkdir -p /var/lock/apache2 /var/run/apache2
-
-RUN groupadd -r Docker_Group && useradd -r -g Docker_Group athikatesting
-
-EXPOSE 80
-
-VOLUME /var/www/html
-
-CMD /usr/sbin/apache2ctl -D FOREGROUND
-
-#default html ersetzen
-ADD  index.html /var/www/html
-#firewall config ausführen
-ADD ufw.sh . 
-RUN chmod +x ./ufw.sh
-```
-2. Im verzeichnis gehen, wo das Dockerfile ist (cd /home/name/Documents/docker/name)
+1. Vagrant File zu Dockerfile umwandeln
+2. Im verzeichnis gehen, wo das Dockerfile ist
 3. Dockerfile builden: 
 ```sh
-docker build -t name .
+docker build -t athika .
 ```
 4. Dockerfile starten mit:
 ```sh
-docker run --rm -d --name name name
+docker run --rm -d --name athika athika
 ```
 5. Funktionsfähigkeit überprüfen:
 ```sh
-docker exec -it name bash
+docker exec -it athika bash
 ```
 und im Container
 ```sh
