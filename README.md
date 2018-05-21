@@ -1,4 +1,4 @@
-Modul 300 - Guide
+Modul 300 - Vagrant
 =============================
 Webserver with Ubuntu 16.4
 
