@@ -68,14 +68,14 @@ docker ps
 ## Webserver Testen
 Um sicher zu sein dass der Apache Server aktiv ist, habe ich folgendes gemacht:
 1. Browser öffnen
-2. IP eingeben ( 127.17.0.2)
+2. IP eingeben ( 172.17.0.2)
 Ausgabe: Default Apache2 Seite 
 
 ## Firewall Regeln nachschauen
 ```sh
 docker-machine ip default
 
-curl http://127.17.0.2:8080
+curl http://172.17.0.2:8080
 ```
 ## Monitoring
 Über CMD:
